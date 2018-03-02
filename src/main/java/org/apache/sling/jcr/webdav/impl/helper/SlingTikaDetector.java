@@ -17,8 +17,7 @@
 package org.apache.sling.jcr.webdav.impl.helper;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.metadata.Metadata;
@@ -41,38 +40,11 @@ public class SlingTikaDetector implements Detector {
         // Look for a resource name in the input metadata
         String name = metadata.get(Metadata.RESOURCE_NAME_KEY);
         if (name != null) {
-            // If the name is a URL, skip the trailing query and fragment parts
-            int question = name.indexOf('?');
-            if (question != -1) {
-                name = name.substring(0, question);
-            }
-            int hash = name.indexOf('#');
-            if (hash != -1) {
-                name = name.substring(0, hash);
-            }
-
-            // If the name is a URL or a path, skip all but the last component
+            // If the name is a path, skip all but the last component
             int slash = name.lastIndexOf('/');
             if (slash != -1) {
                 name = name.substring(slash + 1);
             }
-            int backslash = name.lastIndexOf('\\');
-            if (backslash != -1) {
-                name = name.substring(backslash + 1);
-            }
-
-            // Decode any potential URL encoding
-            int percent = name.indexOf('%');
-            if (percent != -1) {
-                try {
-                    name = URLDecoder.decode(name, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    throw new AssertionError("UTF-8 not supported");
-                }
-            }
-
-            // Skip any leading or trailing whitespace
-            name = name.trim();
             if (name.length() > 0) {
                 // Match the name against the registered patterns
                 String type = mimeTypeService.getMimeType(name);
@@ -84,5 +56,4 @@ public class SlingTikaDetector implements Detector {
 
         return MediaType.OCTET_STREAM;
     }
-
 }
