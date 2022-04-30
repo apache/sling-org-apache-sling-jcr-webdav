@@ -18,20 +18,20 @@
  */
 package org.apache.sling.jcr.webdav.impl.handler;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.server.io.DirListingExportHandler;
 import org.apache.jackrabbit.server.io.IOHandler;
 import org.apache.jackrabbit.server.io.PropertyHandler;
 import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
 
 /**
  * Wraps {@link org.apache.jackrabbit.server.io.DirListingExportHandler} in order to run it as a service.
  */
-@Component(metatype = true, label = "%dirlistingexporthandler.name", description = "%dirlistingexporthandler.description")
-@Property(name = Constants.SERVICE_RANKING, intValue = 100, propertyPrivate = false)
-@Service(value = {IOHandler.class, PropertyHandler.class})
+@Component(
+        service = { IOHandler.class, PropertyHandler.class },
+        property = {
+                Constants.SERVICE_RANKING + "={int}100"
+    })
 public class DirListingExportHandlerService extends DirListingExportHandler {
 
 }

@@ -26,15 +26,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.References;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.server.SessionProvider;
 import org.apache.jackrabbit.server.io.CopyMoveHandler;
 import org.apache.jackrabbit.server.io.DeleteHandler;
@@ -54,92 +45,86 @@ import org.apache.sling.jcr.webdav.impl.handler.SlingPropertyManager;
 import org.apache.sling.jcr.webdav.impl.helper.SlingLocatorFactory;
 import org.apache.sling.jcr.webdav.impl.helper.SlingResourceConfig;
 import org.apache.sling.jcr.webdav.impl.helper.SlingSessionProvider;
-import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 /**
  * The <code>SlingWebDavServlet</code> implements the WebDAV protocol as a
  * default servlet for Sling handling all WebDAV methods.
  *
  */
-@Component(name = "org.apache.sling.jcr.webdav.impl.servlets.SimpleWebDavServlet",
-           label = "%dav.name", description = "%dav.description",
-           metatype = true,
-           policy = ConfigurationPolicy.REQUIRE)
-@Service(Servlet.class)
-@Properties({
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "Sling WebDAV Servlet"),
-    @Property(name = Constants.SERVICE_VENDOR, value = "The Apache Software Foundation"),
-    @Property(name = "sling.servlet.resourceTypes", value = "sling/servlet/default", propertyPrivate = true),
-    @Property(name = "sling.servlet.methods", value = "*", propertyPrivate = true) })
-    @References({
-        @Reference(name = SlingWebDavServlet.IOHANDLER_REF_NAME, referenceInterface = IOHandler.class, cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC),
-        @Reference(name = SlingWebDavServlet.PROPERTYHANDLER_REF_NAME, referenceInterface = PropertyHandler.class, cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC),
-        @Reference(name = SlingWebDavServlet.COPYMOVEHANDLER_REF_NAME, referenceInterface = CopyMoveHandler.class, cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC),
-        @Reference(name = SlingWebDavServlet.DELETEHANDLER_REF_NAME, referenceInterface = DeleteHandler.class, cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-})
+@Component(
+        name = "org.apache.sling.jcr.webdav.impl.servlets.SimpleWebDavServlet",
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        service = Servlet.class,
+        properties = {
+                "service.description=Sling WebDAV Servlet",
+                "service.vendor=The Apache Software Foundation",
+                "sling.servlet.resourceTypes=sling/servlet/default",
+                "sling.servlet.methods=*"
+        })
+@Designate(ocd=SlingWebDavServlet.Config.class)
 public class SlingWebDavServlet extends SimpleWebdavServlet {
 
     public static final String DEFAULT_CONTEXT = "/dav";
-
-    @Property(DEFAULT_CONTEXT)
-    public static final String PROP_CONTEXT = "dav.root";
-
     public static final boolean DEFAULT_CREATE_ABSOLUTE_URI = true;
-
-    @Property(boolValue=DEFAULT_CREATE_ABSOLUTE_URI)
-    public static final String PROP_CREATE_ABSOLUTE_URI = "dav.create-absolute-uri";
-
     public static final String DEFAULT_REALM = "Sling WebDAV";
-
-    @Property(DEFAULT_REALM)
-    public static final String PROP_REALM = "dav.realm";
-
-    public static final String COLLECTION_TYPES = "collection.types";
-
     public static final String TYPE_NONCOLLECTIONS_DEFAULT = "nt:file";
-
     public static final String TYPE_CONTENT_DEFAULT = "nt:resource";
-
-    @Property(name = COLLECTION_TYPES)
-    public static final String[] COLLECTION_TYPES_DEFAULT = new String[] {
-        TYPE_NONCOLLECTIONS_DEFAULT, TYPE_CONTENT_DEFAULT };
-
-    public static final String FILTER_PREFIXES = "filter.prefixes";
-
-    @Property(name = FILTER_PREFIXES)
-    public static final String[] FILTER_PREFIXES_DEFAULT = new String[] {
-        "rep", "jcr" };
-
-    public static final String[] EMPTY_DEFAULT = new String[0];
-
-    @Property({})
-    public static final String FILTER_TYPES = "filter.types";
-
-    @Property({})
-    public static final String FILTER_URIS = "filter.uris";
-
     public static final String TYPE_COLLECTIONS_DEFAULT = "sling:Folder";
-
-    @Property(TYPE_COLLECTIONS_DEFAULT)
     public static final String TYPE_COLLECTIONS = "type.collections";
-
-    @Property(TYPE_NONCOLLECTIONS_DEFAULT)
     public static final String TYPE_NONCOLLECTIONS = "type.noncollections";
-
-    @Property(TYPE_CONTENT_DEFAULT)
     public static final String TYPE_CONTENT = "type.content";
 
     static final String IOHANDLER_REF_NAME = "IOHandler";
-
     static final String PROPERTYHANDLER_REF_NAME = "PropertyHandler";
-
     static final String COPYMOVEHANDLER_REF_NAME = "CopyMoveHandler";
-
     static final String DELETEHANDLER_REF_NAME = "DeleteHandler";
+
+    @ObjectClassDefinition(name = "%dav.name",
+            description = "%dav.description")
+    public @interface Config {
+
+        @AttributeDefinition
+        String dav_root() default DEFAULT_CONTEXT;
+
+        @AttributeDefinition
+        boolean dav_createAbsoluteUri() default DEFAULT_CREATE_ABSOLUTE_URI;
+
+        @AttributeDefinition
+        String dav_realm() default DEFAULT_REALM;
+
+        @AttributeDefinition
+        String[] collection_types() default { TYPE_NONCOLLECTIONS_DEFAULT, TYPE_CONTENT_DEFAULT };
+
+        @AttributeDefinition
+        String[] filter_prefixes() default { "rep", "jcr" };
+
+        @AttributeDefinition
+        String[] filter_types() default {};
+
+        @AttributeDefinition
+        String[] filter_uris() default {};
+
+        @AttributeDefinition
+        String type_collections() default TYPE_COLLECTIONS_DEFAULT;
+
+        @AttributeDefinition
+        String type_noncollections() default TYPE_NONCOLLECTIONS_DEFAULT;
+
+        @AttributeDefinition
+        String type_content() default TYPE_CONTENT_DEFAULT;
+    }
 
     @Reference
     private SlingRepository repository;
@@ -150,17 +135,13 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
     @Reference
     private MimeTypeService mimeTypeService;
 
-    private final SlingIOManager ioManager = new SlingIOManager(
-        IOHANDLER_REF_NAME);
+    private final SlingIOManager ioManager = new SlingIOManager(IOHANDLER_REF_NAME);
 
-    private final SlingPropertyManager propertyManager = new SlingPropertyManager(
-        PROPERTYHANDLER_REF_NAME);
+    private final SlingPropertyManager propertyManager = new SlingPropertyManager(PROPERTYHANDLER_REF_NAME);
 
-    private final SlingCopyMoveManager copyMoveManager = new SlingCopyMoveManager(
-        COPYMOVEHANDLER_REF_NAME);
+    private final SlingCopyMoveManager copyMoveManager = new SlingCopyMoveManager(COPYMOVEHANDLER_REF_NAME);
 
-    private final SlingDeleteManager deleteManager = new SlingDeleteManager(
-            DELETEHANDLER_REF_NAME);
+    private final SlingDeleteManager deleteManager = new SlingDeleteManager(DELETEHANDLER_REF_NAME);
 
     private SlingResourceConfig resourceConfig;
 
@@ -223,7 +204,7 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
 
     // ---------- SCR integration
 
-    protected void activate(ComponentContext context)
+    protected void activate(ComponentContext context, Config config)
             throws NamespaceException, ServletException {
 
         this.ioManager.setComponentContext(context);
@@ -232,11 +213,11 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.deleteManager.setComponentContext(context);
 
         resourceConfig = new SlingResourceConfig(mimeTypeService,
-            context.getProperties(),
-            ioManager,
-            propertyManager,
-            copyMoveManager,
-            deleteManager);
+                config,
+                ioManager,
+                propertyManager,
+                copyMoveManager,
+                deleteManager);
 
         // Register servlet, and set the contextPath field to signal successful
         // registration
@@ -261,6 +242,12 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.deleteManager.setComponentContext(null);
     }
 
+    @Reference(
+            name = SlingWebDavServlet.IOHANDLER_REF_NAME,
+            service = IOHandler.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            bind = "bindIOHandler", unbind = "unbindIOHandler")
     public void bindIOHandler(final ServiceReference ioHandlerReference) {
         this.ioManager.bindIOHandler(ioHandlerReference);
     }
@@ -269,6 +256,12 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.ioManager.unbindIOHandler(ioHandlerReference);
     }
 
+    @Reference(
+            name = SlingWebDavServlet.PROPERTYHANDLER_REF_NAME,
+            service = PropertyHandler.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            bind = "bindPropertyHandler", unbind = "unbindPropertyHandler")
     public void bindPropertyHandler(final ServiceReference propertyHandlerReference) {
         this.propertyManager.bindPropertyHandler(propertyHandlerReference);
     }
@@ -277,6 +270,12 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.propertyManager.unbindPropertyHandler(propertyHandlerReference);
     }
 
+    @Reference(
+            name = SlingWebDavServlet.COPYMOVEHANDLER_REF_NAME,
+            service = CopyMoveHandler.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            bind = "bindCopyMoveHandler", unbind = "unbindCopyMoveHandler")
     public void bindCopyMoveHandler(final ServiceReference copyMoveHandlerReference) {
         this.copyMoveManager.bindCopyMoveHandler(copyMoveHandlerReference);
     }
@@ -285,6 +284,12 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.copyMoveManager.unbindCopyMoveHandler(copyMoveHandlerReference);
     }
 
+    @Reference(
+            name = SlingWebDavServlet.DELETEHANDLER_REF_NAME,
+            service = DeleteHandler.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC,
+            bind = "bindDeleteHandler", unbind = "unbindDeleteHandler")
     public void bindDeleteHandler(final ServiceReference deleteHandlerReference) {
         this.deleteManager.bindDeleteHandler(deleteHandlerReference);
     }

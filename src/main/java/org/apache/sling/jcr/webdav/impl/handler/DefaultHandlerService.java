@@ -18,13 +18,6 @@
  */
 package org.apache.sling.jcr.webdav.impl.handler;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.server.io.DefaultHandler;
 import org.apache.jackrabbit.server.io.DeleteContext;
 import org.apache.jackrabbit.server.io.DeleteHandler;
@@ -43,6 +36,10 @@ import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.sling.commons.osgi.OsgiUtil;
 import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
 import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 
 import java.io.IOException;
 import java.util.Map;
@@ -53,15 +50,15 @@ import javax.jcr.RepositoryException;
  * Wraps {@link org.apache.jackrabbit.server.io.DefaultHandler} in order to run
  * it as a service.
  */
-@Component(metatype = true, label = "%defaulthandler.name", description = "%defaulthandler.description")
-@Properties({
-    @Property(name = Constants.SERVICE_RANKING, intValue = 1000, propertyPrivate = false),
-    @Property(name = SlingWebDavServlet.TYPE_COLLECTIONS, value = SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT, propertyPrivate = false),
-    @Property(name = SlingWebDavServlet.TYPE_NONCOLLECTIONS, value = SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT, propertyPrivate = false),
-    @Property(name = SlingWebDavServlet.TYPE_CONTENT, value = SlingWebDavServlet.TYPE_CONTENT_DEFAULT, propertyPrivate = false) })
-@Service
-public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMoveHandler,
-        DeleteHandler {
+@Component(
+        service = DefaultHandlerService.class,
+        properties = {
+                Constants.SERVICE_RANKING + "={int}1000",
+                SlingWebDavServlet.TYPE_COLLECTIONS + "=" + SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT,
+                SlingWebDavServlet.TYPE_NONCOLLECTIONS + "=" + SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT,
+                SlingWebDavServlet.TYPE_CONTENT + "=" + SlingWebDavServlet.TYPE_CONTENT_DEFAULT
+        })
+public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMoveHandler, DeleteHandler {
 
     private DefaultHandler delegatee;
 

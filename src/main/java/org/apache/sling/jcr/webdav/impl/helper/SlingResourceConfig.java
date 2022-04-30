@@ -27,7 +27,6 @@ import org.apache.jackrabbit.webdav.simple.ItemFilter;
 import org.apache.jackrabbit.webdav.simple.ResourceConfig;
 import org.apache.jackrabbit.webdav.simple.SimpleWebdavServlet;
 import org.apache.sling.commons.mime.MimeTypeService;
-import org.apache.sling.commons.osgi.OsgiUtil;
 import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
 
 import javax.jcr.Item;
@@ -56,7 +55,7 @@ public class SlingResourceConfig extends ResourceConfig {
     private final Dictionary<String, String> servletInitParams;
 
     public SlingResourceConfig(MimeTypeService mimeTypeService,
-            Dictionary<?, ?> config,
+            SlingWebDavServlet.Config config,
             IOManager ioManager,
             PropertyManager propertyManager,
             CopyMoveManager copyMoveManager,
@@ -66,43 +65,28 @@ public class SlingResourceConfig extends ResourceConfig {
         this.propertyManager = propertyManager;
         this.copyMoveManager = copyMoveManager;
         this.deleteManager = deleteManager;
-        collectionTypes = OsgiUtil.toStringArray(
-            config.get(SlingWebDavServlet.COLLECTION_TYPES),
-            SlingWebDavServlet.COLLECTION_TYPES_DEFAULT);
 
-        String[] filterPrefixes = OsgiUtil.toStringArray(
-            config.get(SlingWebDavServlet.FILTER_PREFIXES),
-            SlingWebDavServlet.FILTER_PREFIXES_DEFAULT);
-        String[] filterNodeTypes = OsgiUtil.toStringArray(
-            config.get(SlingWebDavServlet.FILTER_TYPES),
-            SlingWebDavServlet.EMPTY_DEFAULT);
-        String[] filterURIs = OsgiUtil.toStringArray(
-            config.get(SlingWebDavServlet.FILTER_URIS),
-            SlingWebDavServlet.EMPTY_DEFAULT);
+        collectionTypes = config.collection_types();
+        String[] filterPrefixes = config.filter_prefixes();
+        String[] filterNodeTypes = config.filter_types();
+        String[] filterURIs = config.filter_uris();
 
         itemFilter = new DefaultItemFilter();
         itemFilter.setFilteredPrefixes(filterPrefixes);
         itemFilter.setFilteredURIs(filterURIs);
         itemFilter.setFilteredNodetypes(filterNodeTypes);
 
-        servletContextPath = OsgiUtil.toString(
-            config.get(SlingWebDavServlet.PROP_CONTEXT),
-            SlingWebDavServlet.DEFAULT_CONTEXT);
-
-        servletInitParams = new Hashtable<String, String>();
+        servletContextPath = config.dav_root();
+        servletInitParams = new Hashtable<>();
         servletInitParams.put(
             SimpleWebdavServlet.INIT_PARAM_RESOURCE_PATH_PREFIX,
             servletContextPath);
-        String value = OsgiUtil.toString(
-            config.get(SlingWebDavServlet.PROP_REALM),
-            SlingWebDavServlet.DEFAULT_REALM);
+        String value = config.dav_realm();
         servletInitParams.put(
                 SimpleWebdavServlet.INIT_PARAM_AUTHENTICATE_HEADER,
                 "Basic realm=\"" + value + "\"");
 
-        boolean createAbsoluteUri = OsgiUtil.toBoolean(
-            config.get(SlingWebDavServlet.PROP_CREATE_ABSOLUTE_URI),
-            SlingWebDavServlet.DEFAULT_CREATE_ABSOLUTE_URI);
+        boolean createAbsoluteUri = config.dav_createAbsoluteUri();
         servletInitParams.put(
                 SimpleWebdavServlet.INIT_PARAM_CREATE_ABSOLUTE_URI,
                 Boolean.toString(createAbsoluteUri));
