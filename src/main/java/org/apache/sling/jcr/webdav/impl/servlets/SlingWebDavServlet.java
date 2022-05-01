@@ -52,6 +52,8 @@ import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
@@ -66,13 +68,13 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 @Component(
         name = "org.apache.sling.jcr.webdav.impl.servlets.SimpleWebDavServlet",
         configurationPolicy = ConfigurationPolicy.REQUIRE,
-        service = Servlet.class,
-        properties = {
-                "service.description=Sling WebDAV Servlet",
-                "service.vendor=The Apache Software Foundation",
+        service = { Servlet.class },
+        property = {
                 "sling.servlet.resourceTypes=sling/servlet/default",
                 "sling.servlet.methods=*"
         })
+@ServiceDescription("Sling WebDAV Servlet")
+@ServiceVendor("The Apache Software Foundation")
 @Designate(ocd=SlingWebDavServlet.Config.class)
 public class SlingWebDavServlet extends SimpleWebdavServlet {
 

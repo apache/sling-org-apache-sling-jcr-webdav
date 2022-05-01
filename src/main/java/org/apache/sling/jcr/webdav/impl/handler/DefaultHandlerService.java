@@ -35,11 +35,11 @@ import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.sling.commons.osgi.OsgiUtil;
 import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.propertytypes.ServiceRanking;
 
 import java.io.IOException;
 import java.util.Map;
@@ -51,13 +51,13 @@ import javax.jcr.RepositoryException;
  * it as a service.
  */
 @Component(
-        service = DefaultHandlerService.class,
-        properties = {
-                Constants.SERVICE_RANKING + "={int}1000",
+        service = { DefaultHandlerService.class, IOHandler.class, PropertyHandler.class, CopyMoveHandler.class, DeleteHandler.class },
+        property = {
                 SlingWebDavServlet.TYPE_COLLECTIONS + "=" + SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT,
                 SlingWebDavServlet.TYPE_NONCOLLECTIONS + "=" + SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT,
                 SlingWebDavServlet.TYPE_CONTENT + "=" + SlingWebDavServlet.TYPE_CONTENT_DEFAULT
         })
+@ServiceRanking(1000)
 public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMoveHandler, DeleteHandler {
 
     private DefaultHandler delegatee;
