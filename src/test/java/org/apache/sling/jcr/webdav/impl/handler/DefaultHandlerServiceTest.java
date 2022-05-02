@@ -1,0 +1,66 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.sling.jcr.webdav.impl.handler;
+
+import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
+import org.apache.sling.testing.mock.osgi.MockOsgi;
+import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.osgi.framework.BundleContext;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+public class DefaultHandlerServiceTest {
+
+    @Rule
+    public final OsgiContext context = new OsgiContext();
+
+    private DefaultHandlerService defaultHandlerService;
+    private BundleContext bundleContext;
+
+    @Before
+    public void setUp() {
+        bundleContext = MockOsgi.newBundleContext();
+        defaultHandlerService = new DefaultHandlerService();
+        Dictionary<String, Object> properties = new Hashtable<>();
+        properties.put("type.collections", SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT);
+        properties.put("type.noncollections", SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT);
+        properties.put("type.content", SlingWebDavServlet.TYPE_CONTENT_DEFAULT);
+
+        context.registerService(DefaultHandlerService.class, defaultHandlerService, properties);
+        MockOsgi.activate(defaultHandlerService, bundleContext);
+    }
+
+    @Test
+    public void testIfServiceActive() {
+        DefaultHandlerService registeredDefaultHandlerService = context.getService(DefaultHandlerService.class);
+        assertNotNull(registeredDefaultHandlerService);
+
+        assertNull(registeredDefaultHandlerService.getIOManager());
+        assertEquals(registeredDefaultHandlerService.getName(), "org.apache.jackrabbit.server.io.DefaultHandler");
+        MockOsgi.deactivate(defaultHandlerService, bundleContext);
+    }
+}
