@@ -75,7 +75,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
         })
 @ServiceDescription("Sling WebDAV Servlet")
 @ServiceVendor("The Apache Software Foundation")
-@Designate(ocd=SlingWebDavServlet.Config.class)
+@Designate(ocd = SlingWebDavServlet.Config.class)
 public class SlingWebDavServlet extends SimpleWebdavServlet {
 
     public static final String DEFAULT_CONTEXT = "/dav";
