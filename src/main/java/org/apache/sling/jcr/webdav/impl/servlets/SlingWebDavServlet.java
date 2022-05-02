@@ -93,38 +93,37 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
     static final String COPYMOVEHANDLER_REF_NAME = "CopyMoveHandler";
     static final String DELETEHANDLER_REF_NAME = "DeleteHandler";
 
-    @ObjectClassDefinition(name = "%dav.name",
-            description = "%dav.description")
+    @ObjectClassDefinition(name = "%dav.name", description = "%dav.description")
     public @interface Config {
 
-        @AttributeDefinition
+        @AttributeDefinition(name = "%dav.root.name", description = "%dav.root.description")
         String dav_root() default DEFAULT_CONTEXT;
 
-        @AttributeDefinition
-        boolean dav_createAbsoluteUri() default DEFAULT_CREATE_ABSOLUTE_URI;
+        @AttributeDefinition(name = "%dav.create-absolute-uri.name", description = "%dav.create-absolute-uri.description")
+        boolean dav_create$_$absolute$_$uri() default DEFAULT_CREATE_ABSOLUTE_URI;
 
-        @AttributeDefinition
+        @AttributeDefinition(name = "%dav.realm.name", description = "%dav.realm.description")
         String dav_realm() default DEFAULT_REALM;
 
-        @AttributeDefinition
-        String[] collection_types() default { TYPE_NONCOLLECTIONS_DEFAULT, TYPE_CONTENT_DEFAULT };
+        @AttributeDefinition(name = "%collection.types.name", description = "%collection.types.description")
+        String[] collection_types() default {TYPE_NONCOLLECTIONS_DEFAULT, TYPE_CONTENT_DEFAULT};
 
-        @AttributeDefinition
-        String[] filter_prefixes() default { "rep", "jcr" };
+        @AttributeDefinition(name = "%filter.prefixes.name", description = "%filter.prefixes.description")
+        String[] filter_prefixes() default {"rep", "jcr"};
 
-        @AttributeDefinition
+        @AttributeDefinition(name = "%filter.types.name", description = "%filter.types.description")
         String[] filter_types() default {};
 
-        @AttributeDefinition
+        @AttributeDefinition(name = "%filter.uris.name", description = "%filter.uris.description")
         String[] filter_uris() default {};
 
-        @AttributeDefinition
+        @AttributeDefinition(name = "%type.collections.name", description = "%type.collections.description")
         String type_collections() default TYPE_COLLECTIONS_DEFAULT;
 
-        @AttributeDefinition
+        @AttributeDefinition(name = "%type.noncollections.name", description = "%type.noncollections.description")
         String type_noncollections() default TYPE_NONCOLLECTIONS_DEFAULT;
 
-        @AttributeDefinition
+        @AttributeDefinition(name = "%type.content.name", description = "%type.content.description")
         String type_content() default TYPE_CONTENT_DEFAULT;
     }
 

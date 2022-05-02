@@ -86,7 +86,7 @@ public class SlingResourceConfig extends ResourceConfig {
                 SimpleWebdavServlet.INIT_PARAM_AUTHENTICATE_HEADER,
                 "Basic realm=\"" + value + "\"");
 
-        boolean createAbsoluteUri = config.dav_createAbsoluteUri();
+        boolean createAbsoluteUri = config.dav_create$_$absolute$_$uri();
         servletInitParams.put(
                 SimpleWebdavServlet.INIT_PARAM_CREATE_ABSOLUTE_URI,
                 Boolean.toString(createAbsoluteUri));
