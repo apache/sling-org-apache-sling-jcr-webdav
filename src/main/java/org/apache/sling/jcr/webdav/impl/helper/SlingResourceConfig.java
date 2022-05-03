@@ -78,18 +78,12 @@ public class SlingResourceConfig extends ResourceConfig {
 
         servletContextPath = config.dav_root();
         servletInitParams = new Hashtable<>();
-        servletInitParams.put(
-            SimpleWebdavServlet.INIT_PARAM_RESOURCE_PATH_PREFIX,
-            servletContextPath);
+        servletInitParams.put(SimpleWebdavServlet.INIT_PARAM_RESOURCE_PATH_PREFIX, servletContextPath);
         String value = config.dav_realm();
-        servletInitParams.put(
-                SimpleWebdavServlet.INIT_PARAM_AUTHENTICATE_HEADER,
-                "Basic realm=\"" + value + "\"");
+        servletInitParams.put(SimpleWebdavServlet.INIT_PARAM_AUTHENTICATE_HEADER, "Basic realm=\"" + value + "\"");
 
         boolean createAbsoluteUri = config.dav_create$_$absolute$_$uri();
-        servletInitParams.put(
-                SimpleWebdavServlet.INIT_PARAM_CREATE_ABSOLUTE_URI,
-                Boolean.toString(createAbsoluteUri));
+        servletInitParams.put(SimpleWebdavServlet.INIT_PARAM_CREATE_ABSOLUTE_URI, Boolean.toString(createAbsoluteUri));
     }
 
     // ---------- ResourceConfig overwrites

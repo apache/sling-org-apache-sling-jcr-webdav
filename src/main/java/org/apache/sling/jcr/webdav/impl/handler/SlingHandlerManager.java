@@ -33,7 +33,7 @@ import org.osgi.service.component.ComponentContext;
  */
 public class SlingHandlerManager<ManagedType> {
 
-    private final TreeMap<ServiceReference, ManagedType> handlerServices = new TreeMap<ServiceReference, ManagedType>();
+    private final TreeMap<ServiceReference, ManagedType> handlerServices = new TreeMap<>();
 
     private ComponentContext componentContext;
 
@@ -58,9 +58,9 @@ public class SlingHandlerManager<ManagedType> {
                 entries = this.handlerServices.entrySet();
             }
 
-            final ArrayList<ManagedType> ioHandlers = new ArrayList<ManagedType>(
+            final ArrayList<ManagedType> ioHandlers = new ArrayList<>(
                 entries.size());
-            final Map<ServiceReference, ManagedType> updates = new HashMap<ServiceReference, ManagedType>();
+            final Map<ServiceReference, ManagedType> updates = new HashMap<>();
             for (Entry<ServiceReference, ManagedType> entry : entries) {
                 final ManagedType ioHandler;
                 if (entry.getValue() == null) {

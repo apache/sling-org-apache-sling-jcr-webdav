@@ -93,6 +93,7 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
     static final String COPYMOVEHANDLER_REF_NAME = "CopyMoveHandler";
     static final String DELETEHANDLER_REF_NAME = "DeleteHandler";
 
+    @SuppressWarnings("java:S100")
     @ObjectClassDefinition(name = "%dav.name", description = "%dav.description")
     public @interface Config {
 
@@ -220,8 +221,7 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
                 copyMoveManager,
                 deleteManager);
 
-        // Register servlet, and set the contextPath field to signal successful
-        // registration
+        // Register servlet, and set the contextPath field to signal successful registration
         Servlet simpleServlet = new SlingSimpleWebDavServlet(resourceConfig,
             getRepository());
         httpService.registerServlet(resourceConfig.getServletContextPath(),

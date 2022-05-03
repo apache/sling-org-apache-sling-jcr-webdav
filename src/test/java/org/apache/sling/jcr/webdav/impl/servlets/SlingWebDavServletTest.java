@@ -16,50 +16,63 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.sling.jcr.webdav.impl.handler;
+package org.apache.sling.jcr.webdav.impl.servlets;
 
-import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
+import org.apache.sling.commons.mime.MimeTypeService;
+import org.apache.sling.jcr.api.SlingRepository;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
+import org.apache.sling.testing.mock.sling.MockJcrSlingRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.http.HttpService;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
-public class DefaultHandlerServiceTest {
+@RunWith(MockitoJUnitRunner.class)
+public class SlingWebDavServletTest {
 
     @Rule
     public final OsgiContext context = new OsgiContext();
 
-    private DefaultHandlerService defaultHandlerService;
+    private SlingWebDavServlet slingWebDavServlet;
     private BundleContext bundleContext;
+    private SlingRepository repository;
 
     @Before
     public void setUp() {
         bundleContext = MockOsgi.newBundleContext();
-        defaultHandlerService = new DefaultHandlerService();
         Dictionary<String, Object> properties = new Hashtable<>();
+
+        properties.put("dav.root", SlingWebDavServlet.DEFAULT_CONTEXT);
+        properties.put("dav.realm", SlingWebDavServlet.DEFAULT_REALM);
+        properties.put("dav.create-absolute-uri", SlingWebDavServlet.DEFAULT_CREATE_ABSOLUTE_URI);
         properties.put(SlingWebDavServlet.TYPE_COLLECTIONS, SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT);
         properties.put(SlingWebDavServlet.TYPE_NONCOLLECTIONS, SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT);
         properties.put(SlingWebDavServlet.TYPE_CONTENT, SlingWebDavServlet.TYPE_CONTENT_DEFAULT);
 
-        context.registerInjectActivateService(DefaultHandlerService.class, defaultHandlerService, properties);
+        //Mock HttpService
+        HttpService httpService = Mockito.mock(HttpService.class);
+        context.registerService(HttpService.class, httpService);
+
+        //Mock MimeTypeService
+        MimeTypeService mimeTypeService = Mockito.mock(MimeTypeService.class);
+        context.registerService(MimeTypeService.class, mimeTypeService);
+
+        repository = context.registerInjectActivateService(new MockJcrSlingRepository());
+        slingWebDavServlet = context.registerInjectActivateService(new SlingWebDavServlet(), properties);
     }
 
     @Test
     public void testIfServiceActive() {
-        DefaultHandlerService registeredDefaultHandlerService = context.getService(DefaultHandlerService.class);
-        assertNotNull(registeredDefaultHandlerService);
-
-        assertNull(registeredDefaultHandlerService.getIOManager());
-        assertEquals("org.apache.jackrabbit.server.io.DefaultHandler", registeredDefaultHandlerService.getName());
-        MockOsgi.deactivate(defaultHandlerService, bundleContext);
+        assertNotNull(slingWebDavServlet);
     }
 }

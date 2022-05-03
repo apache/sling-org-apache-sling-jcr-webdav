@@ -66,6 +66,7 @@ public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMo
 
     private DefaultHandler delegatee;
 
+    @SuppressWarnings("java:S100")
     @ObjectClassDefinition(name = "%defaulthandler.name", description = "%defaulthandler.description")
     public @interface Config {
 

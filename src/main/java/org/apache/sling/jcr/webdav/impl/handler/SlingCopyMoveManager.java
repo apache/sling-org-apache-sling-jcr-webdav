@@ -34,7 +34,7 @@ public class SlingCopyMoveManager extends CopyMoveManagerImpl {
     private final SlingHandlerManager<CopyMoveHandler> handlerManager;
 
     public SlingCopyMoveManager(final String referenceName) {
-        handlerManager = new SlingHandlerManager<CopyMoveHandler>(referenceName);
+        handlerManager = new SlingHandlerManager<>(referenceName);
     }
 
     @Override
