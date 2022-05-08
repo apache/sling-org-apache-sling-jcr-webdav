@@ -1,13 +1,6 @@
 Bundle-Category: sling,jcr
 Export-Package: org.apache.jackrabbit.server.io;version=${jackrabbit.version};provide:=true
 
-Import-Package:\
-    !java.io,\
-    !java.lang.*,\
-    !java.net,\
-    !java.util.*,\
-    *
-
 Private-Package:\
     org.apache.jackrabbit.server,\
     org.apache.jackrabbit.webdav.simple,\
@@ -22,3 +15,6 @@ Private-Package:\
     org/apache/jackrabbit/webdav/jcr/JcrValueType*.class|\
     org/apache/jackrabbit/webdav/jcr/lock/*|\
     META-INF/maven/**)
+
+-removeheaders:\
+  Include-Resource
