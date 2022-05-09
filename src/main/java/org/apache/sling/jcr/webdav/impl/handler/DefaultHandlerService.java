@@ -54,7 +54,7 @@ import javax.jcr.RepositoryException;
  */
 @Component(
         immediate = true,
-        service = {DefaultHandlerService.class,
+        service = {
                 IOHandler.class,
                 PropertyHandler.class,
                 CopyMoveHandler.class,

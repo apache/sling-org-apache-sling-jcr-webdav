@@ -47,8 +47,10 @@ import org.apache.sling.jcr.webdav.impl.helper.SlingResourceConfig;
 import org.apache.sling.jcr.webdav.impl.helper.SlingSessionProvider;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
@@ -72,6 +74,21 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
         property = {
                 "sling.servlet.resourceTypes=sling/servlet/default",
                 "sling.servlet.methods=*"
+        },
+        reference = {
+                @Reference( name = SlingWebDavServlet.IOHANDLER_REF_NAME, service = IOHandler.class,
+                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+                        bind = "bindIOHandler", unbind = "unbindIOHandler"),
+                @Reference( name = SlingWebDavServlet.PROPERTYHANDLER_REF_NAME, service = PropertyHandler.class,
+                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+                        bind = "bindPropertyHandler", unbind = "unbindPropertyHandler"),
+                @Reference( name = SlingWebDavServlet.COPYMOVEHANDLER_REF_NAME, service = CopyMoveHandler.class,
+                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+                        bind = "bindCopyMoveHandler", unbind = "unbindCopyMoveHandler"),
+                @Reference( name = SlingWebDavServlet.DELETEHANDLER_REF_NAME, service = DeleteHandler.class,
+                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+                        bind = "bindDeleteHandler", unbind = "unbindDeleteHandler")
+
         })
 @ServiceDescription("Sling WebDAV Servlet")
 @ServiceVendor("The Apache Software Foundation")
@@ -204,8 +221,7 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         return sessionProvider;
     }
 
-    // ---------- SCR integration
-
+    @Activate
     protected void activate(ComponentContext context, Config config)
             throws NamespaceException, ServletException {
 
@@ -222,13 +238,13 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
                 deleteManager);
 
         // Register servlet, and set the contextPath field to signal successful registration
-        Servlet simpleServlet = new SlingSimpleWebDavServlet(resourceConfig,
-            getRepository());
+        Servlet simpleServlet = new SlingSimpleWebDavServlet(resourceConfig, getRepository());
         httpService.registerServlet(resourceConfig.getServletContextPath(),
             simpleServlet, resourceConfig.getServletInitParams(), null);
         simpleWebDavServletRegistered = true;
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext context) {
 
         if (simpleWebDavServletRegistered) {
@@ -243,12 +259,6 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.deleteManager.setComponentContext(null);
     }
 
-    @Reference(
-            name = SlingWebDavServlet.IOHANDLER_REF_NAME,
-            service = IOHandler.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            bind = "bindIOHandler", unbind = "unbindIOHandler")
     public void bindIOHandler(final ServiceReference ioHandlerReference) {
         this.ioManager.bindIOHandler(ioHandlerReference);
     }
@@ -257,12 +267,6 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.ioManager.unbindIOHandler(ioHandlerReference);
     }
 
-    @Reference(
-            name = SlingWebDavServlet.PROPERTYHANDLER_REF_NAME,
-            service = PropertyHandler.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            bind = "bindPropertyHandler", unbind = "unbindPropertyHandler")
     public void bindPropertyHandler(final ServiceReference propertyHandlerReference) {
         this.propertyManager.bindPropertyHandler(propertyHandlerReference);
     }
@@ -271,12 +275,6 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.propertyManager.unbindPropertyHandler(propertyHandlerReference);
     }
 
-    @Reference(
-            name = SlingWebDavServlet.COPYMOVEHANDLER_REF_NAME,
-            service = CopyMoveHandler.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            bind = "bindCopyMoveHandler", unbind = "unbindCopyMoveHandler")
     public void bindCopyMoveHandler(final ServiceReference copyMoveHandlerReference) {
         this.copyMoveManager.bindCopyMoveHandler(copyMoveHandlerReference);
     }
@@ -285,12 +283,6 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         this.copyMoveManager.unbindCopyMoveHandler(copyMoveHandlerReference);
     }
 
-    @Reference(
-            name = SlingWebDavServlet.DELETEHANDLER_REF_NAME,
-            service = DeleteHandler.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
-            policy = ReferencePolicy.DYNAMIC,
-            bind = "bindDeleteHandler", unbind = "unbindDeleteHandler")
     public void bindDeleteHandler(final ServiceReference deleteHandlerReference) {
         this.deleteManager.bindDeleteHandler(deleteHandlerReference);
     }

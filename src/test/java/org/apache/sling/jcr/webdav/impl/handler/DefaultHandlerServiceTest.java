@@ -18,20 +18,20 @@
  */
 package org.apache.sling.jcr.webdav.impl.handler;
 
+import org.apache.jackrabbit.server.io.CopyMoveHandler;
+import org.apache.jackrabbit.server.io.DeleteHandler;
+import org.apache.jackrabbit.server.io.IOHandler;
+import org.apache.jackrabbit.server.io.PropertyHandler;
 import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
-import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.osgi.framework.BundleContext;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public class DefaultHandlerServiceTest {
 
@@ -39,11 +39,9 @@ public class DefaultHandlerServiceTest {
     public final OsgiContext context = new OsgiContext();
 
     private DefaultHandlerService defaultHandlerService;
-    private BundleContext bundleContext;
 
     @Before
     public void setUp() {
-        bundleContext = MockOsgi.newBundleContext();
         defaultHandlerService = new DefaultHandlerService();
         Dictionary<String, Object> properties = new Hashtable<>();
         properties.put(SlingWebDavServlet.TYPE_COLLECTIONS, SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT);
@@ -55,11 +53,9 @@ public class DefaultHandlerServiceTest {
 
     @Test
     public void testIfServiceActive() {
-        DefaultHandlerService registeredDefaultHandlerService = context.getService(DefaultHandlerService.class);
-        assertNotNull(registeredDefaultHandlerService);
-
-        assertNull(registeredDefaultHandlerService.getIOManager());
-        assertEquals("org.apache.jackrabbit.server.io.DefaultHandler", registeredDefaultHandlerService.getName());
-        MockOsgi.deactivate(defaultHandlerService, bundleContext);
+        assertNotNull(context.getService(CopyMoveHandler.class));
+        assertNotNull(context.getService(PropertyHandler.class));
+        assertNotNull(context.getService(IOHandler.class));
+        assertNotNull(context.getService(DeleteHandler.class));
     }
 }
