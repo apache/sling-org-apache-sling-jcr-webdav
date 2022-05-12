@@ -1,8 +1,6 @@
 Bundle-Category: sling,jcr
 Export-Package: org.apache.jackrabbit.server.io;version=${jackrabbit.version};provide:=true
 
-Import-Package: org.apache.sling.commons.osgi, *
-
 Private-Package:\
     org.apache.jackrabbit.server,\
     org.apache.jackrabbit.webdav.simple,\
