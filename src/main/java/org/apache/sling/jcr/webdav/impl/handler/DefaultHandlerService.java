@@ -18,13 +18,6 @@
  */
 package org.apache.sling.jcr.webdav.impl.handler;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.jackrabbit.server.io.DefaultHandler;
 import org.apache.jackrabbit.server.io.DeleteContext;
 import org.apache.jackrabbit.server.io.DeleteHandler;
@@ -40,9 +33,15 @@ import org.apache.jackrabbit.server.io.CopyMoveContext;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.property.PropEntry;
-import org.apache.sling.commons.osgi.OsgiUtil;
 import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
-import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.propertytypes.ServiceRanking;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import java.io.IOException;
 import java.util.Map;
@@ -53,34 +52,43 @@ import javax.jcr.RepositoryException;
  * Wraps {@link org.apache.jackrabbit.server.io.DefaultHandler} in order to run
  * it as a service.
  */
-@Component(metatype = true, label = "%defaulthandler.name", description = "%defaulthandler.description")
-@Properties({
-    @Property(name = Constants.SERVICE_RANKING, intValue = 1000, propertyPrivate = false),
-    @Property(name = SlingWebDavServlet.TYPE_COLLECTIONS, value = SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT, propertyPrivate = false),
-    @Property(name = SlingWebDavServlet.TYPE_NONCOLLECTIONS, value = SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT, propertyPrivate = false),
-    @Property(name = SlingWebDavServlet.TYPE_CONTENT, value = SlingWebDavServlet.TYPE_CONTENT_DEFAULT, propertyPrivate = false) })
-@Service
-public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMoveHandler,
-        DeleteHandler {
+@Component(
+        immediate = true,
+        service = {
+                IOHandler.class,
+                PropertyHandler.class,
+                CopyMoveHandler.class,
+                DeleteHandler.class
+        })
+@ServiceRanking(1000)
+@Designate(ocd = DefaultHandlerService.Config.class)
+public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMoveHandler, DeleteHandler {
 
     private DefaultHandler delegatee;
+
+    @SuppressWarnings("java:S100")
+    @ObjectClassDefinition(name = "%defaulthandler.name", description = "%defaulthandler.description")
+    public @interface Config {
+
+        @AttributeDefinition(name = "%type.collections.name", description = "%type.collections.description")
+        String type_collections() default SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT;
+
+        @AttributeDefinition(name = "%type.noncollections.name", description = "%type.noncollections.description")
+        String type_noncollections() default SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT;
+
+        @AttributeDefinition(name = "%type.content.name", description = "%type.content.description")
+        String type_content() default SlingWebDavServlet.TYPE_CONTENT_DEFAULT;
+    }
 
     @Activate
     @Modified
     @SuppressWarnings("unused")
-    private void activate(final Map<String, Object> properties) {
-        final String collectionType = OsgiUtil.toString(
-            properties.get(SlingWebDavServlet.TYPE_COLLECTIONS),
-            SlingWebDavServlet.TYPE_COLLECTIONS_DEFAULT);
-        final String nonCollectionType = OsgiUtil.toString(
-            properties.get(SlingWebDavServlet.TYPE_NONCOLLECTIONS),
-            SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT);
-        final String contentType = OsgiUtil.toString(
-            properties.get(SlingWebDavServlet.TYPE_CONTENT),
-            SlingWebDavServlet.TYPE_CONTENT_DEFAULT);
+    private void activate(final Config config) {
+        final String collectionType = config.type_collections();
+        final String nonCollectionType = config.type_noncollections();
+        final String contentType = config.type_content();
 
-        this.delegatee = new DefaultHandler(null, collectionType,
-            nonCollectionType, contentType);
+        this.delegatee = new DefaultHandler(null, collectionType, nonCollectionType, contentType);
     }
 
     @Deactivate

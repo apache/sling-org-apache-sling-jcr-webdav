@@ -1,0 +1,20 @@
+Bundle-Category: sling,jcr
+Export-Package: org.apache.jackrabbit.server.io;version=${jackrabbit.version};provide:=true
+
+Private-Package:\
+    org.apache.jackrabbit.server,\
+    org.apache.jackrabbit.webdav.simple,\
+    org.apache.sling.jcr.webdav.impl.*
+
+-includeresource:\
+    @jackrabbit-jcr-server-*.jar!/\
+    (org/apache/jackrabbit/webdav/jcr/DavLocatorFactoryImpl*.class|\
+    org/apache/jackrabbit/webdav/jcr/ItemResourceConstants*.class|\
+    org/apache/jackrabbit/webdav/jcr/JcrDavException*.class|\
+    org/apache/jackrabbit/webdav/jcr/JcrDavSession*.class|\
+    org/apache/jackrabbit/webdav/jcr/JcrValueType*.class|\
+    org/apache/jackrabbit/webdav/jcr/lock/*|\
+    META-INF/maven/**)
+
+-removeheaders:\
+  Include-Resource

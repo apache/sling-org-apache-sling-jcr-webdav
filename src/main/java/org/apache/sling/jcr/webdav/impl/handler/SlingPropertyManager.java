@@ -34,7 +34,7 @@ public class SlingPropertyManager extends PropertyManagerImpl {
     private final SlingHandlerManager<PropertyHandler> handlerManager;
 
     public SlingPropertyManager(final String referenceName) {
-        handlerManager = new SlingHandlerManager<PropertyHandler>(referenceName);
+        handlerManager = new SlingHandlerManager<>(referenceName);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class SlingIOManager extends IOManagerImpl {
     private final SlingHandlerManager<IOHandler> handlerManager;
 
     public SlingIOManager(final String referenceName) {
-        handlerManager = new SlingHandlerManager<IOHandler>(referenceName);
+        handlerManager = new SlingHandlerManager<>(referenceName);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class SlingDeleteManager extends DeleteManagerImpl {
     private final SlingHandlerManager<DeleteHandler> handlerManager;
 
     public SlingDeleteManager(final String referenceName) {
-        handlerManager = new SlingHandlerManager<DeleteHandler>(referenceName);
+        handlerManager = new SlingHandlerManager<>(referenceName);
     }
 
     @Override
