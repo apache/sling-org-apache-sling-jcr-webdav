@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>sling-bundle-parent</artifactId>
-        <version>47</version>
+        <version>62</version>
         <relativePath />
     </parent>
 
@@ -119,7 +119,7 @@
         <!-- OSGi Libraries -->
         <dependency>
             <groupId>org.osgi</groupId>
-            <artifactId>osgi.core</artifactId>
+            <artifactId>org.osgi.framework</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -160,6 +160,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
