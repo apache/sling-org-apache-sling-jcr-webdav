@@ -18,12 +18,12 @@
  */
 package org.apache.sling.jcr.webdav.impl.servlets;
 
-import java.io.IOException;
-
 import javax.jcr.Repository;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 import org.apache.jackrabbit.webdav.simple.SimpleWebdavServlet;
 import org.apache.sling.jcr.api.SlingRepository;
@@ -45,8 +45,7 @@ public class SlingSimpleWebDavServlet extends SimpleWebdavServlet {
 
     private final Repository repository;
 
-    /* package */ SlingSimpleWebDavServlet(SlingResourceConfig resourceConfig,
-            Repository repository) {
+    /* package */ SlingSimpleWebDavServlet(SlingResourceConfig resourceConfig, Repository repository) {
         this.resourceConfig = resourceConfig;
         this.repository = repository;
     }
@@ -61,8 +60,8 @@ public class SlingSimpleWebDavServlet extends SimpleWebdavServlet {
     }
 
     @Override
-    protected void service(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
             doService(request, response);
         } catch (RuntimeException re) {
@@ -74,8 +73,8 @@ public class SlingSimpleWebDavServlet extends SimpleWebdavServlet {
         }
     }
 
-    protected void doService(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void doService(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         // According to the spec the path info is either null or
         // a string starting with a slash. Thus a string of length 1
@@ -107,9 +106,9 @@ public class SlingSimpleWebDavServlet extends SimpleWebdavServlet {
                 // if we don't have a default workspace to redirect to, we
                 // cannot handle the request and fail with not found
                 response.sendError(
-                    HttpServletResponse.SC_NOT_FOUND,
-                    "JCR workspace name required, please add it to the end of the URL"
-                        + " (for the Jackrabbit embedded repository the default name is 'default') ");
+                        HttpServletResponse.SC_NOT_FOUND,
+                        "JCR workspace name required, please add it to the end of the URL"
+                                + " (for the Jackrabbit embedded repository the default name is 'default') ");
 
             } else {
 
@@ -121,7 +120,6 @@ public class SlingSimpleWebDavServlet extends SimpleWebdavServlet {
                 }
                 uri += slingRepo.getDefaultWorkspace();
                 response.sendRedirect(uri);
-
             }
         }
     }
@@ -130,5 +128,4 @@ public class SlingSimpleWebDavServlet extends SimpleWebdavServlet {
     public Repository getRepository() {
         return repository;
     }
-
 }

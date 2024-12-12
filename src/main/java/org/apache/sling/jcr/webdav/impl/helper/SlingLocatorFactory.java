@@ -33,10 +33,8 @@ public class SlingLocatorFactory implements DavLocatorFactory {
     public DavResourceLocator createResourceLocator(String prefix, String href) {
 
         if (href == null) {
-            throw new IllegalArgumentException(
-                "Request handle must not be null.");
+            throw new IllegalArgumentException("Request handle must not be null.");
         }
-
 
         // if href starts with the prefix, cut the prefix off the href
         if (prefix != null && prefix.length() > 0) {
@@ -50,7 +48,6 @@ public class SlingLocatorFactory implements DavLocatorFactory {
             href = href.substring(0, href.length() - 1);
         }
 
-
         // an empty requestHandle (after removal of the "/") signifies a request
         // to the root that does not represent a repository item.
         String resourcePath;
@@ -60,8 +57,7 @@ public class SlingLocatorFactory implements DavLocatorFactory {
             resourcePath = Text.unescape(href);
         }
 
-        return new SlingResourceLocator(prefix, workspaceName, resourcePath,
-            this);
+        return new SlingResourceLocator(prefix, workspaceName, resourcePath, this);
     }
 
     /**
@@ -78,8 +74,7 @@ public class SlingLocatorFactory implements DavLocatorFactory {
      * @return a new <code>DavResourceLocator</code>
      * @see DavLocatorFactory#createResourceLocator(String, String, String)
      */
-    public DavResourceLocator createResourceLocator(String prefix,
-            String workspacePath, String resourcePath) {
+    public DavResourceLocator createResourceLocator(String prefix, String workspacePath, String resourcePath) {
         return createResourceLocator(prefix, workspacePath, resourcePath, true);
     }
 
@@ -94,10 +89,8 @@ public class SlingLocatorFactory implements DavLocatorFactory {
      * @see DavLocatorFactory#createResourceLocator(String, String, String,
      *      boolean)
      */
-    public DavResourceLocator createResourceLocator(String prefix,
-            String workspacePath, String resourcePath, boolean isResourcePath) {
-        return new SlingResourceLocator(prefix, workspacePath, resourcePath,
-            this);
+    public DavResourceLocator createResourceLocator(
+            String prefix, String workspacePath, String resourcePath, boolean isResourcePath) {
+        return new SlingResourceLocator(prefix, workspacePath, resourcePath, this);
     }
-
 }

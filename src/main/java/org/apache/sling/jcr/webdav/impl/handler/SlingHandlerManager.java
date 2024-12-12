@@ -58,16 +58,14 @@ public class SlingHandlerManager<ManagedType> {
                 entries = this.handlerServices.entrySet();
             }
 
-            final ArrayList<ManagedType> ioHandlers = new ArrayList<>(
-                entries.size());
+            final ArrayList<ManagedType> ioHandlers = new ArrayList<>(entries.size());
             final Map<ServiceReference, ManagedType> updates = new HashMap<>();
             for (Entry<ServiceReference, ManagedType> entry : entries) {
                 final ManagedType ioHandler;
                 if (entry.getValue() == null) {
                     final ServiceReference key = entry.getKey();
                     // unckecked cast
-                    ioHandler = (ManagedType) this.componentContext.locateService(
-                        referenceName, key);
+                    ioHandler = (ManagedType) this.componentContext.locateService(referenceName, key);
                     // since we're inside the entries iterator, we can't update the map
                     // defer updating the map until this loop is finished
                     if (ioHandler != null) {

@@ -49,8 +49,7 @@ public class SlingSessionProvider implements SessionProvider {
      * <code>null</code>, a <code>LoginException</code> is thrown to force
      * authentication.
      */
-    public Session getSession(HttpServletRequest request, Repository rep,
-            String workspace) throws LoginException {
+    public Session getSession(HttpServletRequest request, Repository rep, String workspace) throws LoginException {
 
         // we do not accept the anonymous session for WebDAV !
         if (request.getAuthType() == null) {
@@ -58,8 +57,8 @@ public class SlingSessionProvider implements SessionProvider {
         }
 
         // otherwise return the session from the request attribute
-        ResourceResolver resourceResolver = (ResourceResolver)
-            request.getAttribute(AuthenticationSupport.REQUEST_ATTRIBUTE_RESOLVER);
+        ResourceResolver resourceResolver =
+                (ResourceResolver) request.getAttribute(AuthenticationSupport.REQUEST_ATTRIBUTE_RESOLVER);
 
         if (resourceResolver == null) {
             return null;
@@ -74,5 +73,4 @@ public class SlingSessionProvider implements SessionProvider {
     public void releaseSession(Session session) {
         // nothing to do, we must not logout the Sling session
     }
-
 }

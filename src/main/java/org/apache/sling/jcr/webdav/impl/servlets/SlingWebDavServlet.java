@@ -18,13 +18,13 @@
  */
 package org.apache.sling.jcr.webdav.impl.servlets;
 
-import java.io.IOException;
-
 import javax.jcr.Repository;
 import javax.jcr.Session;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 import org.apache.jackrabbit.server.SessionProvider;
 import org.apache.jackrabbit.server.io.CopyMoveHandler;
@@ -70,25 +70,37 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 @Component(
         name = "org.apache.sling.jcr.webdav.impl.servlets.SimpleWebDavServlet",
         configurationPolicy = ConfigurationPolicy.REQUIRE,
-        service = { Servlet.class },
-        property = {
-                "sling.servlet.resourceTypes=sling/servlet/default",
-                "sling.servlet.methods=*"
-        },
+        service = {Servlet.class},
+        property = {"sling.servlet.resourceTypes=sling/servlet/default", "sling.servlet.methods=*"},
         reference = {
-                @Reference( name = SlingWebDavServlet.IOHANDLER_REF_NAME, service = IOHandler.class,
-                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-                        bind = "bindIOHandler", unbind = "unbindIOHandler"),
-                @Reference( name = SlingWebDavServlet.PROPERTYHANDLER_REF_NAME, service = PropertyHandler.class,
-                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-                        bind = "bindPropertyHandler", unbind = "unbindPropertyHandler"),
-                @Reference( name = SlingWebDavServlet.COPYMOVEHANDLER_REF_NAME, service = CopyMoveHandler.class,
-                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-                        bind = "bindCopyMoveHandler", unbind = "unbindCopyMoveHandler"),
-                @Reference( name = SlingWebDavServlet.DELETEHANDLER_REF_NAME, service = DeleteHandler.class,
-                        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
-                        bind = "bindDeleteHandler", unbind = "unbindDeleteHandler")
-
+            @Reference(
+                    name = SlingWebDavServlet.IOHANDLER_REF_NAME,
+                    service = IOHandler.class,
+                    cardinality = ReferenceCardinality.MULTIPLE,
+                    policy = ReferencePolicy.DYNAMIC,
+                    bind = "bindIOHandler",
+                    unbind = "unbindIOHandler"),
+            @Reference(
+                    name = SlingWebDavServlet.PROPERTYHANDLER_REF_NAME,
+                    service = PropertyHandler.class,
+                    cardinality = ReferenceCardinality.MULTIPLE,
+                    policy = ReferencePolicy.DYNAMIC,
+                    bind = "bindPropertyHandler",
+                    unbind = "unbindPropertyHandler"),
+            @Reference(
+                    name = SlingWebDavServlet.COPYMOVEHANDLER_REF_NAME,
+                    service = CopyMoveHandler.class,
+                    cardinality = ReferenceCardinality.MULTIPLE,
+                    policy = ReferencePolicy.DYNAMIC,
+                    bind = "bindCopyMoveHandler",
+                    unbind = "unbindCopyMoveHandler"),
+            @Reference(
+                    name = SlingWebDavServlet.DELETEHANDLER_REF_NAME,
+                    service = DeleteHandler.class,
+                    cardinality = ReferenceCardinality.MULTIPLE,
+                    policy = ReferencePolicy.DYNAMIC,
+                    bind = "bindDeleteHandler",
+                    unbind = "unbindDeleteHandler")
         })
 @ServiceDescription("Sling WebDAV Servlet")
 @ServiceVendor("The Apache Software Foundation")
@@ -117,7 +129,9 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
         @AttributeDefinition(name = "%dav.root.name", description = "%dav.root.description")
         String dav_root() default DEFAULT_CONTEXT;
 
-        @AttributeDefinition(name = "%dav.create-absolute-uri.name", description = "%dav.create-absolute-uri.description")
+        @AttributeDefinition(
+                name = "%dav.create-absolute-uri.name",
+                description = "%dav.create-absolute-uri.description")
         boolean dav_create$_$absolute$_$uri() default DEFAULT_CREATE_ABSOLUTE_URI;
 
         @AttributeDefinition(name = "%dav.realm.name", description = "%dav.realm.description")
@@ -222,25 +236,20 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
     }
 
     @Activate
-    protected void activate(ComponentContext context, Config config)
-            throws NamespaceException, ServletException {
+    protected void activate(ComponentContext context, Config config) throws NamespaceException, ServletException {
 
         this.ioManager.setComponentContext(context);
         this.propertyManager.setComponentContext(context);
         this.copyMoveManager.setComponentContext(context);
         this.deleteManager.setComponentContext(context);
 
-        resourceConfig = new SlingResourceConfig(mimeTypeService,
-                config,
-                ioManager,
-                propertyManager,
-                copyMoveManager,
-                deleteManager);
+        resourceConfig = new SlingResourceConfig(
+                mimeTypeService, config, ioManager, propertyManager, copyMoveManager, deleteManager);
 
         // Register servlet, and set the contextPath field to signal successful registration
         Servlet simpleServlet = new SlingSimpleWebDavServlet(resourceConfig, getRepository());
-        httpService.registerServlet(resourceConfig.getServletContextPath(),
-            simpleServlet, resourceConfig.getServletInitParams(), null);
+        httpService.registerServlet(
+                resourceConfig.getServletContextPath(), simpleServlet, resourceConfig.getServletInitParams(), null);
         simpleWebDavServletRegistered = true;
     }
 
@@ -293,7 +302,8 @@ public class SlingWebDavServlet extends SimpleWebdavServlet {
 
     /** Overridden as the base class uses sendError that we don't want (SLING-2443) */
     @Override
-    protected void sendUnauthorized(WebdavRequest request, WebdavResponse response, DavException error) throws IOException {
+    protected void sendUnauthorized(WebdavRequest request, WebdavResponse response, DavException error)
+            throws IOException {
         response.setHeader("WWW-Authenticate", getAuthenticateHeaderValue());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         if (error != null) {

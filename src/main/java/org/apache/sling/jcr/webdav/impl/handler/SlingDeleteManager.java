@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.sling.jcr.webdav.impl.handler;
 
 import org.apache.jackrabbit.server.io.DeleteHandler;
@@ -39,8 +38,7 @@ public class SlingDeleteManager extends DeleteManagerImpl {
 
     @Override
     public void addDeleteHandler(DeleteHandler propertyHandler) {
-        throw new UnsupportedOperationException(
-                "This DeleteManager only supports registered DeleteHandler services");
+        throw new UnsupportedOperationException("This DeleteManager only supports registered DeleteHandler services");
     }
 
     @Override
@@ -59,5 +57,4 @@ public class SlingDeleteManager extends DeleteManagerImpl {
     public void unbindDeleteHandler(final ServiceReference deleteHandlerReference) {
         this.handlerManager.unbindHandler(deleteHandlerReference);
     }
-
 }

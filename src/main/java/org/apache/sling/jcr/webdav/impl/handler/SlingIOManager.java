@@ -38,8 +38,7 @@ public class SlingIOManager extends IOManagerImpl {
 
     @Override
     public void addIOHandler(IOHandler ioHandler) {
-        throw new UnsupportedOperationException(
-            "This IOManager only supports registered IOHandler services");
+        throw new UnsupportedOperationException("This IOManager only supports registered IOHandler services");
     }
 
     @Override

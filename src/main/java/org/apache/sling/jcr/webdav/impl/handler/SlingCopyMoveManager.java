@@ -40,7 +40,7 @@ public class SlingCopyMoveManager extends CopyMoveManagerImpl {
     @Override
     public void addCopyMoveHandler(CopyMoveHandler propertyHandler) {
         throw new UnsupportedOperationException(
-            "This CopyMoveManager only supports registered CopyMoveHandler services");
+                "This CopyMoveManager only supports registered CopyMoveHandler services");
     }
 
     @Override

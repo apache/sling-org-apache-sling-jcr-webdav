@@ -18,6 +18,9 @@
  */
 package org.apache.sling.jcr.webdav.impl.handler;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.apache.jackrabbit.server.io.CopyMoveHandler;
 import org.apache.jackrabbit.server.io.DeleteHandler;
 import org.apache.jackrabbit.server.io.IOHandler;
@@ -27,9 +30,6 @@ import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 import static org.junit.Assert.assertNotNull;
 

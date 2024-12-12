@@ -18,6 +18,13 @@
  */
 package org.apache.sling.jcr.webdav.impl.handler;
 
+import javax.jcr.RepositoryException;
+
+import java.io.IOException;
+import java.util.Map;
+
+import org.apache.jackrabbit.server.io.CopyMoveContext;
+import org.apache.jackrabbit.server.io.CopyMoveHandler;
 import org.apache.jackrabbit.server.io.DefaultHandler;
 import org.apache.jackrabbit.server.io.DeleteContext;
 import org.apache.jackrabbit.server.io.DeleteHandler;
@@ -28,8 +35,6 @@ import org.apache.jackrabbit.server.io.ImportContext;
 import org.apache.jackrabbit.server.io.PropertyExportContext;
 import org.apache.jackrabbit.server.io.PropertyHandler;
 import org.apache.jackrabbit.server.io.PropertyImportContext;
-import org.apache.jackrabbit.server.io.CopyMoveHandler;
-import org.apache.jackrabbit.server.io.CopyMoveContext;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.property.PropEntry;
@@ -43,23 +48,13 @@ import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-
 /**
  * Wraps {@link org.apache.jackrabbit.server.io.DefaultHandler} in order to run
  * it as a service.
  */
 @Component(
         immediate = true,
-        service = {
-                IOHandler.class,
-                PropertyHandler.class,
-                CopyMoveHandler.class,
-                DeleteHandler.class
-        })
+        service = {IOHandler.class, PropertyHandler.class, CopyMoveHandler.class, DeleteHandler.class})
 @ServiceRanking(1000)
 @Designate(ocd = DefaultHandlerService.Config.class)
 public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMoveHandler, DeleteHandler {
@@ -117,13 +112,11 @@ public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMo
         return delegatee.canImport(context, resource);
     }
 
-    public boolean importContent(ImportContext context, boolean isCollection)
-            throws IOException {
+    public boolean importContent(ImportContext context, boolean isCollection) throws IOException {
         return delegatee.importContent(context, isCollection);
     }
 
-    public boolean importContent(ImportContext context, DavResource resource)
-            throws IOException {
+    public boolean importContent(ImportContext context, DavResource resource) throws IOException {
         return delegatee.importContent(context, resource);
     }
 
@@ -135,13 +128,11 @@ public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMo
         return delegatee.canExport(context, resource);
     }
 
-    public boolean exportContent(ExportContext context, boolean isCollection)
-            throws IOException {
+    public boolean exportContent(ExportContext context, boolean isCollection) throws IOException {
         return delegatee.exportContent(context, isCollection);
     }
 
-    public boolean exportContent(ExportContext context, DavResource resource)
-            throws IOException {
+    public boolean exportContent(ExportContext context, DavResource resource) throws IOException {
         return delegatee.exportContent(context, resource);
     }
 
@@ -149,8 +140,8 @@ public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMo
         return delegatee.canExport(context, isCollection);
     }
 
-    public boolean exportProperties(PropertyExportContext exportContext,
-            boolean isCollection) throws RepositoryException {
+    public boolean exportProperties(PropertyExportContext exportContext, boolean isCollection)
+            throws RepositoryException {
         return delegatee.exportProperties(exportContext, isCollection);
     }
 
@@ -158,8 +149,7 @@ public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMo
         return delegatee.canImport(context, isCollection);
     }
 
-    public Map<? extends PropEntry, ?> importProperties(
-            PropertyImportContext importContext, boolean isCollection)
+    public Map<? extends PropEntry, ?> importProperties(PropertyImportContext importContext, boolean isCollection)
             throws RepositoryException {
         return delegatee.importProperties(importContext, isCollection);
     }
@@ -177,16 +167,14 @@ public class DefaultHandlerService implements IOHandler, PropertyHandler, CopyMo
     }
 
     public boolean move(CopyMoveContext context, DavResource source, DavResource destination) throws DavException {
-      return delegatee.move(context, source, destination);
+        return delegatee.move(context, source, destination);
     }
 
-    public boolean delete(DeleteContext deleteContext, DavResource davResource)
-            throws DavException {
+    public boolean delete(DeleteContext deleteContext, DavResource davResource) throws DavException {
         return delegatee.delete(deleteContext, davResource);
     }
 
-    public boolean canDelete(DeleteContext deleteContext,
-            DavResource davResource) {
+    public boolean canDelete(DeleteContext deleteContext, DavResource davResource) {
         return delegatee.canDelete(deleteContext, davResource);
     }
 }

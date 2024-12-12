@@ -27,8 +27,8 @@ import org.osgi.service.component.propertytypes.ServiceRanking;
 /**
  * Wraps {@link org.apache.jackrabbit.server.io.DirListingExportHandler} in order to run it as a service.
  */
-@Component(immediate = true, service = { IOHandler.class, PropertyHandler.class })
+@Component(
+        immediate = true,
+        service = {IOHandler.class, PropertyHandler.class})
 @ServiceRanking(100)
-public class DirListingExportHandlerService extends DirListingExportHandler {
-
-}
+public class DirListingExportHandlerService extends DirListingExportHandler {}

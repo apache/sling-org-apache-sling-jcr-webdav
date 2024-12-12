@@ -18,8 +18,6 @@
  */
 package org.apache.sling.jcr.webdav.impl.helper;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +28,8 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class SlingTikaDetectorTest {
 
     private static final ByteArrayInputStream EMPTY_INPUT_STREAM = new ByteArrayInputStream(new byte[0]);
@@ -37,12 +37,10 @@ public class SlingTikaDetectorTest {
     private MimeTypeService mimeTypeService = new MimeTypeService() {
 
         @Override
-        public void registerMimeType(String arg0, String... arg1) {
-        }
+        public void registerMimeType(String arg0, String... arg1) {}
 
         @Override
-        public void registerMimeType(InputStream arg0) throws IOException {
-        }
+        public void registerMimeType(InputStream arg0) throws IOException {}
 
         @Override
         public String getMimeType(String name) {

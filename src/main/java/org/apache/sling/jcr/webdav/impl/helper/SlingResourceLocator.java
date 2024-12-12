@@ -34,8 +34,7 @@ class SlingResourceLocator implements DavResourceLocator {
 
     private final String href;
 
-    SlingResourceLocator(String prefix, String workspaceName,
-            String resourcePath, SlingLocatorFactory factory) {
+    SlingResourceLocator(String prefix, String workspaceName, String resourcePath, SlingLocatorFactory factory) {
 
         this.prefix = prefix;
         this.workspaceName = workspaceName;
@@ -107,9 +106,7 @@ class SlingResourceLocator implements DavResourceLocator {
      * @see DavResourceLocator#isSameWorkspace(org.apache.jackrabbit.webdav.DavResourceLocator)
      */
     public boolean isSameWorkspace(DavResourceLocator locator) {
-        return (locator == null)
-                ? false
-                : isSameWorkspace(locator.getWorkspaceName());
+        return (locator == null) ? false : isSameWorkspace(locator.getWorkspaceName());
     }
 
     /**
@@ -122,9 +119,7 @@ class SlingResourceLocator implements DavResourceLocator {
      */
     public boolean isSameWorkspace(String workspaceName) {
         String thisWspName = getWorkspaceName();
-        return (thisWspName == null)
-                ? workspaceName == null
-                : thisWspName.equals(workspaceName);
+        return (thisWspName == null) ? workspaceName == null : thisWspName.equals(workspaceName);
     }
 
     /**
@@ -170,8 +165,8 @@ class SlingResourceLocator implements DavResourceLocator {
      */
     public String getRepositoryPath() {
         return getResourcePath();
-//        factory.getRepositoryPath(getResourcePath(),
-//            getWorkspacePath());
+        //        factory.getRepositoryPath(getResourcePath(),
+        //            getWorkspacePath());
     }
 
     /**

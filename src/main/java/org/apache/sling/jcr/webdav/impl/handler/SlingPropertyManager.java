@@ -40,7 +40,7 @@ public class SlingPropertyManager extends PropertyManagerImpl {
     @Override
     public void addPropertyHandler(PropertyHandler propertyHandler) {
         throw new UnsupportedOperationException(
-            "This PropertyManager only supports registered PropertyHandler services");
+                "This PropertyManager only supports registered PropertyHandler services");
     }
 
     @Override

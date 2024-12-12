@@ -18,6 +18,14 @@
  */
 package org.apache.sling.jcr.webdav.impl.helper;
 
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import java.net.URL;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.apache.jackrabbit.server.io.CopyMoveManager;
 import org.apache.jackrabbit.server.io.DeleteManager;
 import org.apache.jackrabbit.server.io.IOManager;
@@ -28,13 +36,6 @@ import org.apache.jackrabbit.webdav.simple.ResourceConfig;
 import org.apache.jackrabbit.webdav.simple.SimpleWebdavServlet;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.jcr.webdav.impl.servlets.SlingWebDavServlet;
-
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import java.net.URL;
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 public class SlingResourceConfig extends ResourceConfig {
 
@@ -54,7 +55,8 @@ public class SlingResourceConfig extends ResourceConfig {
 
     private final Dictionary<String, String> servletInitParams;
 
-    public SlingResourceConfig(MimeTypeService mimeTypeService,
+    public SlingResourceConfig(
+            MimeTypeService mimeTypeService,
             SlingWebDavServlet.Config config,
             IOManager ioManager,
             PropertyManager propertyManager,

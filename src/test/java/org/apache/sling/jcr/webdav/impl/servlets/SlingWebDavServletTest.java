@@ -18,6 +18,9 @@
  */
 package org.apache.sling.jcr.webdav.impl.servlets;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.sling.jcr.api.SlingRepository;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
@@ -31,9 +34,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.http.HttpService;
-
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -59,11 +59,11 @@ public class SlingWebDavServletTest {
         properties.put(SlingWebDavServlet.TYPE_NONCOLLECTIONS, SlingWebDavServlet.TYPE_NONCOLLECTIONS_DEFAULT);
         properties.put(SlingWebDavServlet.TYPE_CONTENT, SlingWebDavServlet.TYPE_CONTENT_DEFAULT);
 
-        //Mock HttpService
+        // Mock HttpService
         HttpService httpService = Mockito.mock(HttpService.class);
         context.registerService(HttpService.class, httpService);
 
-        //Mock MimeTypeService
+        // Mock MimeTypeService
         MimeTypeService mimeTypeService = Mockito.mock(MimeTypeService.class);
         context.registerService(MimeTypeService.class, mimeTypeService);
 
