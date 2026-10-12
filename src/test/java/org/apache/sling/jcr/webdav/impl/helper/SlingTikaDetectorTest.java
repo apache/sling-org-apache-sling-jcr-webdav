@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaCoreProperties;
 import org.apache.tika.mime.MediaType;
 import org.junit.Test;
 
@@ -69,7 +70,7 @@ public class SlingTikaDetectorTest {
     public void withPercentInName() {
         // see SLING-7528: checks that there is no percent-unescaping
         Metadata metadata = new Metadata();
-        metadata.add(Metadata.RESOURCE_NAME_KEY, "a/b%c.html");
+        metadata.add(TikaCoreProperties.RESOURCE_NAME_KEY, "a/b%c.html");
         assertEquals(MediaType.TEXT_HTML, detector.detect(EMPTY_INPUT_STREAM, metadata));
     }
 }

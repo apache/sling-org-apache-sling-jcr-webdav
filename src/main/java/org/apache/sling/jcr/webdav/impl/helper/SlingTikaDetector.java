@@ -23,6 +23,7 @@ import java.io.InputStream;
 import org.apache.sling.commons.mime.MimeTypeService;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaCoreProperties;
 import org.apache.tika.mime.MediaType;
 
 public class SlingTikaDetector implements Detector {
@@ -40,7 +41,7 @@ public class SlingTikaDetector implements Detector {
         //    consideration when trying to detect the MIME type.
 
         // Look for a resource name in the input metadata
-        String name = metadata.get(Metadata.RESOURCE_NAME_KEY);
+        String name = metadata.get(TikaCoreProperties.RESOURCE_NAME_KEY);
         if (name != null) {
             // If the name is a path, skip all but the last component
             int slash = name.lastIndexOf('/');
